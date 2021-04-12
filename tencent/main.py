@@ -14,13 +14,14 @@ def main():
     cookie = {
         "cookie": "          "
     }
+    # 填礼品id，默认为OW典藏包
     datas = {
         "itemCode": "OW_UPGRADE"
     }
     success = 0
+    flag = 0
     for num in range(1, 500):  
         print(num)
-        flag = 0
         request = requests.post(base_url, headers=headers, data=datas, cookies=cookie)
         d = json.loads(request.content.decode('utf8'))
         if d['msg'] == 'login':
@@ -29,11 +30,16 @@ def main():
         else:
             if d['msg'] == 'item_limit':
                 text = 'OW典藏包领取失败'
+                print(d)
             elif d['msg'] == 'success':
                 text = 'OW典藏包领取成功'
                 print(d)
                 flag = 1
                 success = 1
+            elif d['msg'] == 'exist_record':
+                text = '您已拥有该礼品，请勿重复领取'
+                print(d)
+                flag = 1
             else:
                 text = '未知原因引起失败'
                 print(d)
